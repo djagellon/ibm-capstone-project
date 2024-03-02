@@ -86,6 +86,7 @@ python3 -m pip install -U -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 ```
+note: include `--run-syncdb` for creating tables for apps without migrations
 
 ### Run Server
 ```
@@ -94,6 +95,64 @@ python3 manage.py runserver
 
 #### Additional Setup
 - Update `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` with the root url `server/djangoproj/settings.py`. (do not include `/` at the end) 
+
+## Building and Configuring client-side
+from `./server/frontend`
+
+```
+npm install
+npm run build
+```
+
+## Build and Run Mongoose API Endpoints
+from `./server/database`
+
+```
+docker build . -t nodeapp
+docker-compose up
+```
+notes:
+- Check `Fetch Reviews` to test if the API endpoint returns all the reviews as intended
+- add backend url to `dangoapp/.env` (exclude `/`)
+
+## Deploying sentiment analysis as microservice (done on Code Engine)
+
+### Create Code Engine Project
+Start Code Engine from ibm apps > Cloud > Code Engine > Create Project
+Open "Code Engine CLI"
+Check/Set Current Project
+```
+imbcloud ce project current
+
+#if error, set project by:
+ibmcloud ce project list
+ibmcloud ce ??? #need to find this
+```
+
+### Deploy Sentiment analysis
+from `./server/djangoapp/microservices`
+
+Build sentiment analyzer app:
+```
+docker build . -t us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer
+```
+
+Push docker image
+```
+docker push us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer
+```
+
+Deploy analyser app on code engine
+```
+ibmcloud ce application create --name sentianalyzer --image us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer --registry-secret icr-secret --port 5000
+```
+
+Verify generated URL
+Test by adding `/analyze/Fantastic` to URL
+
+notes:
+- add code engine url to `djangoapp/.env`
+
 
 
 
