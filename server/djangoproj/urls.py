@@ -1,3 +1,4 @@
+# flake8: E501, E722
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView

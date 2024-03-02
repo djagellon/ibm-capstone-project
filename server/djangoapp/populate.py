@@ -1,3 +1,4 @@
+# flake8: E501
 from .models import CarMake, CarModel
 
 
