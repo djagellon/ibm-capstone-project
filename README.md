@@ -126,7 +126,7 @@ imbcloud ce project current
 
 #if error, set project by:
 ibmcloud ce project list
-ibmcloud ce ??? #need to find this
+ibmcloud ce project select -n "<Code Engine Name>"
 ```
 
 ### Deploy Sentiment analysis
